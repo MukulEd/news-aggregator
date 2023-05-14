@@ -30,7 +30,7 @@ const Filter1 = () => {
         label: "Source 2",
       },
       {
-        value: "s3",
+        value: "s1",
         label: "Source 3",
       },
     ]);
@@ -38,15 +38,15 @@ const Filter1 = () => {
   const onGetCategories = () => {
     setCategoryOptions([
       {
-        value: "s3",
+        value: "c1",
         label: "Cat 1",
       },
       {
-        value: "s2",
+        value: "c2",
         label: "Cat 2",
       },
       {
-        value: "s3",
+        value: "c3",
         label: "Cat 3",
       },
     ]);
@@ -54,15 +54,15 @@ const Filter1 = () => {
   const onGetAuthors = () => {
     setAuthorOptions([
       {
-        value: "s3",
+        value: "a1",
         label: "Auth 1",
       },
       {
-        value: "s2",
+        value: "a2",
         label: "Auth 2",
       },
       {
-        value: "s3",
+        value: "a3",
         label: "Auth 3",
       },
     ]);
@@ -252,7 +252,7 @@ const Filter1 = () => {
       <div
         id="filterSection"
         className={
-          "absolute left-0 md:py-10 lg:px-20 md:px-6 py-9 px-4 bg-gray-50 md:w-3/4 w-full rounded shadow-2xl border-2 border-slate-400" +
+          "absolute left-0 md:py-10 lg:px-20 md:px-6 py-9 px-4 bg-gray-50 md:w-3/4 w-full rounded shadow-2xl border-2 border-slate-100 " +
           (showFilters ? "block" : "hidden")
         }
       >
@@ -331,8 +331,9 @@ const Filter1 = () => {
             <Select
               options={categoryOptions}
               components={animatedComponents}
-              isMutli
+              isMulti
               className="md:w-1/2 w-full"
+              isSearchable={true}
             />
           </div>
         </div>
@@ -372,8 +373,9 @@ const Filter1 = () => {
             <Select
               options={sourceOptions}
               components={animatedComponents}
-              isMutli
+              isMulti
               className="md:w-1/2 w-full"
+              isSearchable={true}
             />
           </div>
         </div>
@@ -407,8 +409,9 @@ const Filter1 = () => {
             <Select
               options={authorOptions}
               components={animatedComponents}
-              isMutli
+              isMulti
               className="md:w-1/2 w-full"
+              isSearchable={true}
             />
           </div>
         </div>
