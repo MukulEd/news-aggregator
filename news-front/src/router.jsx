@@ -2,7 +2,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Register from "./views/Register";
 import NotFound from "./views/NotFound";
-import DefaultLayout from "./components/layouts/DefaultLayout";
+import AuthenticatedLayout from "./components/layouts/AuthenticatedLayout";
 import GuestLayout from "@/components/layouts/GuestLayout.jsx";
 import Home from "./views/Home";
 import SearchPage from "./views/SearchPage";
@@ -10,7 +10,7 @@ import SingleArticle from "./views/SingleArticle.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DefaultLayout />,
+    element: <AuthenticatedLayout />,
     children: [
       {
         path: "/",
