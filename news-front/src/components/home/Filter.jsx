@@ -1,58 +1,82 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { DateRange } from "react-date-range";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
 
 const Filter1 = () => {
   const [showFilters, setShowfilters] = useState(true);
-  const [check, setCheck] = useState({
-    leather: false,
-    cotton: false,
-    fabric: false,
-    crocodile: false,
-    wool: false,
-    large: false,
-    medium: false,
-    small: false,
-    mini: false,
-    luxesignatire: false,
-    luxelondon: false,
-  });
+  const [categoryOptions, setCategoryOptions] = useState(true);
+  const [sourceOptions, setSourceOptions] = useState(true);
+  const [authorOptions, setAuthorOptions] = useState(true);
 
-  const {
-    leather,
-    cotton,
-    fabric,
-    crocodile,
-    wool,
-    large,
-    medium,
-    small,
-    mini,
-    luxesignatire,
-    luxelondon,
-  } = check;
+  const animatedComponents = makeAnimated();
 
-  const changeHandler = (e) => {
-    setCheck({
-      ...check,
-      [e.target.name]: e.target.checked,
-    });
+  useEffect(() => {
+    onGetSources();
+    onGetCategories();
+    onGetAuthors();
+  }, []);
+
+  const onGetSources = () => {
+    setSourceOptions([
+      {
+        value: "s3",
+        label: "Source 1",
+      },
+      {
+        value: "s2",
+        label: "Source 2",
+      },
+      {
+        value: "s3",
+        label: "Source 3",
+      },
+    ]);
+  };
+  const onGetCategories = () => {
+    setCategoryOptions([
+      {
+        value: "s3",
+        label: "Cat 1",
+      },
+      {
+        value: "s2",
+        label: "Cat 2",
+      },
+      {
+        value: "s3",
+        label: "Cat 3",
+      },
+    ]);
+  };
+  const onGetAuthors = () => {
+    setAuthorOptions([
+      {
+        value: "s3",
+        label: "Auth 1",
+      },
+      {
+        value: "s2",
+        label: "Auth 2",
+      },
+      {
+        value: "s3",
+        label: "Auth 3",
+      },
+    ]);
   };
 
-  const applyFilters = (e) => {
-    setCheck({
-      ...check,
-      leather: false,
-      cotton: false,
-      fabric: false,
-      crocodile: false,
-      wool: false,
-      large: false,
-      medium: false,
-      small: false,
-      mini: false,
-      luxesignatire: false,
-      luxelondon: false,
-    });
-  };
+  const [date, setDate] = useState([
+    {
+      endDate: new Date(),
+      startDate: new Date(),
+      key: "selection",
+    },
+  ]);
+
+  const applyFilters = () => {};
 
   return (
     <div className="2xl:container 2xl:mx-auto">
@@ -228,7 +252,7 @@ const Filter1 = () => {
       <div
         id="filterSection"
         className={
-          "absolute left-0 md:py-10 lg:px-20 md:px-6 py-9 px-4 bg-gray-50 md:w-1/2 w-full " +
+          "absolute left-0 md:py-10 lg:px-20 md:px-6 py-9 px-4 bg-gray-50 md:w-3/4 w-full rounded shadow-2xl border-2 border-slate-400" +
           (showFilters ? "block" : "hidden")
         }
       >
@@ -303,49 +327,13 @@ const Filter1 = () => {
               Categories
             </p>
           </div>
-          <div className=" md:flex md:space-x-6 mt-8 grid grid-cols-3 gap-y-8 flex-wrap">
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-start ">
-              <div className=" w-4 h-4 rounded-full bg-white shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                White
-              </p>
-            </div>
-            <div className=" flex space-x-2 justify-center items-center">
-              <div className=" w-4 h-4 rounded-full bg-blue-600 shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                Blue
-              </p>
-            </div>
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-end">
-              <div className=" w-4 h-4 rounded-full bg-red-600 shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                Red
-              </p>
-            </div>
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-start ">
-              <div className=" w-4 h-4 rounded-full bg-indigo-600 shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                Indigo
-              </p>
-            </div>
-            <div className=" flex space-x-2 justify-center items-center">
-              <div className=" w-4 h-4 rounded-full bg-black shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                Black
-              </p>
-            </div>
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-end">
-              <div className=" w-4 h-4 rounded-full bg-purple-600 shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                Purple
-              </p>
-            </div>
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-start">
-              <div className=" w-4 h-4 rounded-full bg-gray-600 shadow"></div>
-              <p className=" text-base leading-4 text-gray-600 font-normal">
-                Grey
-              </p>
-            </div>
+          <div className="md:flex md:space-x-6 mt-8 grid md:grid-cols-3 gap-y-8 flex-wrap">
+            <Select
+              options={categoryOptions}
+              components={animatedComponents}
+              isMutli
+              className="md:w-1/2 w-full"
+            />
           </div>
         </div>
 
@@ -380,112 +368,13 @@ const Filter1 = () => {
               Sources
             </p>
           </div>
-          <div className=" md:flex md:space-x-6 mt-8 grid grid-cols-3 gap-y-8 flex-wrap">
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-start">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Leather"
-                name="leather"
-                value="Leather"
-                checked={leather}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Leather"
-                  >
-                    Leather
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex justify-center items-center">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Cotton"
-                name="cotton"
-                value="Cotton"
-                checked={cotton}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Cotton"
-                  >
-                    Cotton
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-end">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Fabric"
-                name="fabric"
-                value="Fabric"
-                checked={fabric}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Fabric"
-                  >
-                    Fabric
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex space-x-2 md:justify-center md:items-center items-center justify-start">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Crocodile"
-                name="crocodile"
-                value="Crocodile"
-                checked={crocodile}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Crocodile"
-                  >
-                    Crocodile
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex justify-center items-center">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Wool"
-                name="wool"
-                value="Wool"
-                checked={wool}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Wool"
-                  >
-                    Wool
-                  </label>
-                </div>
-              </div>
-            </div>
+          <div className=" md:flex md:space-x-6 mt-8 grid md:grid-cols-3 gap-y-8 flex-wrap">
+            <Select
+              options={sourceOptions}
+              components={animatedComponents}
+              isMutli
+              className="md:w-1/2 w-full"
+            />
           </div>
         </div>
 
@@ -514,91 +403,13 @@ const Filter1 = () => {
               Authors
             </p>
           </div>
-          <div className=" md:flex md:space-x-6 mt-8 grid grid-cols-3 gap-y-8 flex-wrap">
-            <div className=" flex md:justify-center md:items-center items-center justify-start ">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Large"
-                name="large"
-                value="Large"
-                checked={large}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Large"
-                  >
-                    Large
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex justify-center items-center ">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Medium"
-                name="medium"
-                value="Medium"
-                checked={medium}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Medium"
-                  >
-                    Medium
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex md:justify-center md:items-center items-center justify-end ">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Small"
-                name="small"
-                value="Small"
-                checked={small}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Small"
-                  >
-                    Small
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex md:justify-center md:items-center items-center justify-start ">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="Mini"
-                name="mini"
-                value="Mini"
-                checked={mini}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="Mini"
-                  >
-                    Mini
-                  </label>
-                </div>
-              </div>
-            </div>
+          <div className=" md:flex md:space-x-6 mt-8 grid md:grid-cols-3 gap-y-8 flex-wrap">
+            <Select
+              options={authorOptions}
+              components={animatedComponents}
+              isMutli
+              className="md:w-1/2 w-full"
+            />
           </div>
         </div>
 
@@ -629,48 +440,13 @@ const Filter1 = () => {
             </p>
           </div>
           <div className=" flex mt-8 space-x-8">
-            <div className=" flex justify-center items-center">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="LS"
-                name="luxesignatire"
-                value="LS"
-                checked={luxesignatire}
-                onChange={changeHandler}
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="LS"
-                  >
-                    Luxe signature
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex justify-center items-center">
-              <input
-                className="w-4 h-4 mr-2"
-                type="checkbox"
-                id="LxL"
-                name="luxelondon"
-                checked={luxelondon}
-                onChange={changeHandler}
-                value="LxL"
-              />
-              <div className=" inline-block">
-                <div className=" flex space-x-6 justify-center items-center">
-                  <label
-                    className=" mr-2 text-sm leading-3 font-normal text-gray-600"
-                    htmlFor="LxL"
-                  >
-                    Luxe x London
-                  </label>
-                </div>
-              </div>
-            </div>
+            <DateRange
+              editableDateInputs={true}
+              onChange={(item) => setDate([item.selection])}
+              moveRangeOnFirstSelection={false}
+              ranges={date}
+              maxDate={new Date()}
+            />
           </div>
         </div>
 
