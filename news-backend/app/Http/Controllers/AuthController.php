@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         $validate = Validator::make($request->all(), $rules);
         if ($validate->fails()) {
-            return ResponseBuilder::error(422, [], $validate->errors()->messages());
+            return ResponseBuilder::error(422, [], $validate->errors()->messages(), 422);
         }
 
         $credentials = $request->only(['email', 'password']);
@@ -44,7 +44,9 @@ class AuthController extends Controller
             $token = Auth::guard()->attempt($credentials);
 
             if (!$token) {
-                return ResponseBuilder::error(403);
+                return ResponseBuilder::asError(400)->withData([
+                    'message' => 'Invalid Credentials'
+                ])->withHttpCode(400)->build();
             }
         } catch (JWTException $e) {
             return ResponseBuilder::error(500);

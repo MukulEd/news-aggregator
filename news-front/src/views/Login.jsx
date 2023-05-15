@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useStateContext } from "@/contexts/ContextProvider.jsx";
 import axios from "@/axios.js";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { useFocus } from "@/components/helper/Focus";
 /** Components */
 import Header from "@/components/auth/Header";
 import Input from "@/components/auth/Input";
+import Loader from "@/components/helper/Loader";
 
 const loginFields = [
   {
@@ -70,10 +71,11 @@ export default function Login() {
         if (error.response.status == 422) {
           setErrors(error.response.data.data);
           setFocus();
+          return;
         }
         toast.error(
-          error.response.data
-            ? error.response.data.message
+          error.response.data && error.response.data.data
+            ? error.response.data.data.message
             : "Something went wrong,please try again later!"
         );
       })
@@ -122,21 +124,7 @@ export default function Login() {
           type="submit"
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 mt-10"
         >
-          {submittingForm ? (
-            <svg
-              className="w-5 h-5 animate-spin"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <g>
-                <path fill="none" d="M0 0h24v24H0z"></path>
-                <path d="M3.055 13H5.07a7.002 7.002 0 0 0 13.858 0h2.016a9.001 9.001 0 0 1-17.89 0zm0-2a9.001 9.001 0 0 1 17.89 0H18.93a7.002 7.002 0 0 0-13.858 0H3.055z"></path>
-              </g>
-            </svg>
-          ) : (
-            ""
-          )}
+          <Loader show={submittingForm} />
           Login
         </button>
       </form>

@@ -6,7 +6,7 @@ import {
   Link,
 } from "react-router-dom";
 import { useStateContext } from "@/contexts/ContextProvider.jsx";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import axios from "@/axios.js";
 
 /* import components*/

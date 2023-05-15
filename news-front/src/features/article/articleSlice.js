@@ -1,23 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "@/axios.js";
 
 export const articleSlice = createSlice({
-  name: "articles",
+  name: "article",
   initialState: {
     articles: {
-      loading: true,
+      loading: "idle",
       data: [],
+      error: null,
     },
     categories: {
-      loading: true,
+      loading: "idle",
       data: [],
+      error: null,
     },
     sources: {
-      loading: true,
+      loading: "idle",
       data: [],
+      error: null,
     },
     authors: {
-      loading: true,
+      loading: "idle",
       data: [],
+      error: null,
     },
     filters: {
       sources: [],
@@ -26,26 +31,38 @@ export const articleSlice = createSlice({
       startDate: null,
       endDate: null,
     },
-    value: 0,
+    value: 1,
   },
-  reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getArticles.pending, (state, action) => {
+      if (state.articles.loading === "idle") {
+        state.articles.loading = "pending";
+      }
+    });
+    builder.addCase(getArticles.fulfilled, (state, action) => {
+      if (state.articles.loading === "pending") {
+        state.articles.data = action.payload.data.articles;
+        state.articles.loading = "idle";
+      }
+    });
+    builder.addCase(getArticles.rejected, (state, action) => {
+      console.log(action, "error");
+      if (state.articles.loading === "pending") {
+        state.articles.loading = "idle";
+        state.articles.error = "Error occured";
+      }
+    });
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = articleSlice.actions;
+export const getArticles = createAsyncThunk(
+  "article/getArticles",
+  async (arg, { getState }) => {
+    const state = getState();
+    const response = await axios.get("/articles");
+    return response.data;
+  }
+);
 
 export default articleSlice.reducer;

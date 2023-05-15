@@ -21,7 +21,7 @@ class ApiController extends Controller
         $offset = $request->query('offset', 4);
         $user = Auth::guard()->user();
         if (!$user) {
-            return ResponseBuilder::asError(404)->withMessage('user_not_found')->build();
+            return ResponseBuilder::asError(404)->withMessage('user not found')->build();
         }
         $userAuthor = UserAuthors::where([
             ['user_id', $user->id],
@@ -96,7 +96,7 @@ class ApiController extends Controller
                 'date' => $data['pub_date'] ?? null,
                 'description' => $data['snippet'] ?? null,
                 'url' => $data['web_url'] ?? null,
-                'image' => null,
+                'image' => isset($data['multimedia']) && isset($data['multimedia'][5]) ? 'https://static01.nyt.com/' . $data['multimedia'][5]['url'] : null,
                 'title' => $data['headline']['main'] ?? null,
             ];
         });
@@ -121,7 +121,7 @@ class ApiController extends Controller
                 'description' => $data['fields']['bodyText'] ?? null,
                 'url' => $data['webUrl'] ?? null,
                 'image' => $data['fields']['thumbnail'] ?? null,
-                'webTitle' => $data['webTitle'] ?? null,
+                'title' => $data['webTitle'] ?? null,
             ];
         });
         return $updatedResponseCollection->toArray();
