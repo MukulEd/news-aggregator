@@ -4,69 +4,24 @@ import makeAnimated from "react-select/animated";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import { useSelector, useDispatch } from "react-redux";
+import { setFilterData } from "@/features/article/articleSlice";
 
+const makeOptions = (data) => {
+  return data.map((point) => ({ value: point.id, label: point.name }));
+};
 const Filter1 = () => {
   const [showFilters, setShowfilters] = useState(false);
-  const [categoryOptions, setCategoryOptions] = useState(true);
-  const [sourceOptions, setSourceOptions] = useState(true);
-  const [authorOptions, setAuthorOptions] = useState(true);
+  const { categories, sources, authors } = useSelector(
+    (state) => state.article
+  );
+  const dispatch = useDispatch();
+
+  const categoriesOptions = makeOptions(categories.data);
+  const sourcesOptions = makeOptions(sources.data);
+  const authorOptions = makeOptions(authors.data);
 
   const animatedComponents = makeAnimated();
-
-  useEffect(() => {
-    onGetSources();
-    onGetCategories();
-    onGetAuthors();
-  }, []);
-
-  const onGetSources = () => {
-    setSourceOptions([
-      {
-        value: "s3",
-        label: "Source 1",
-      },
-      {
-        value: "s2",
-        label: "Source 2",
-      },
-      {
-        value: "s1",
-        label: "Source 3",
-      },
-    ]);
-  };
-  const onGetCategories = () => {
-    setCategoryOptions([
-      {
-        value: "c1",
-        label: "Cat 1",
-      },
-      {
-        value: "c2",
-        label: "Cat 2",
-      },
-      {
-        value: "c3",
-        label: "Cat 3",
-      },
-    ]);
-  };
-  const onGetAuthors = () => {
-    setAuthorOptions([
-      {
-        value: "a1",
-        label: "Auth 1",
-      },
-      {
-        value: "a2",
-        label: "Auth 2",
-      },
-      {
-        value: "a3",
-        label: "Auth 3",
-      },
-    ]);
-  };
 
   const [date, setDate] = useState([
     {
@@ -75,6 +30,23 @@ const Filter1 = () => {
       key: "selection",
     },
   ]);
+
+  const handleSelectChange = (values, { name }) => {
+    dispatch(setFilterData({ actionType: name, data: values }));
+  };
+  const handleDateRangeChange = (item) => {
+    setDate([item.selection]);
+    const { startDate, endDate } = item.selection;
+    dispatch(
+      setFilterData({
+        actionType: "date",
+        data: {
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        },
+      })
+    );
+  };
 
   const applyFilters = () => {};
 
@@ -284,7 +256,7 @@ const Filter1 = () => {
           </svg>
         </div>
 
-        {/* Colors Section */}
+        {/* Categories Section */}
         <div>
           <div className=" flex space-x-2">
             <svg
@@ -329,11 +301,15 @@ const Filter1 = () => {
           </div>
           <div className="md:flex md:space-x-6 mt-8 grid md:grid-cols-3 gap-y-8 flex-wrap">
             <Select
-              options={categoryOptions}
+              options={categoriesOptions}
               components={animatedComponents}
               isMulti
               className="md:w-1/2 w-full"
               isSearchable={true}
+              onChange={handleSelectChange}
+              placeholder={"Select Categories"}
+              isLoading={categories.loading == "pending"}
+              name={"categories"}
             />
           </div>
         </div>
@@ -371,11 +347,15 @@ const Filter1 = () => {
           </div>
           <div className=" md:flex md:space-x-6 mt-8 grid md:grid-cols-3 gap-y-8 flex-wrap">
             <Select
-              options={sourceOptions}
+              options={sourcesOptions}
               components={animatedComponents}
               isMulti
               className="md:w-1/2 w-full"
               isSearchable={true}
+              placeholder={"Select Sources"}
+              isLoading={sources.loading == "pending"}
+              onChange={handleSelectChange}
+              name={"sources"}
             />
           </div>
         </div>
@@ -412,6 +392,10 @@ const Filter1 = () => {
               isMulti
               className="md:w-1/2 w-full"
               isSearchable={true}
+              placeholder={"Select authors"}
+              isLoading={authors.loading == "pending"}
+              onChange={handleSelectChange}
+              name={"authors"}
             />
           </div>
         </div>
@@ -445,7 +429,7 @@ const Filter1 = () => {
           <div className=" flex mt-8 space-x-8">
             <DateRange
               editableDateInputs={true}
-              onChange={(item) => setDate([item.selection])}
+              onChange={handleDateRangeChange}
               moveRangeOnFirstSelection={false}
               ranges={date}
               maxDate={new Date()}

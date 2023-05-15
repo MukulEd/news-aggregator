@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getArticles } from "@/features/article/articleSlice";
+import {
+  getArticles,
+  getCategories,
+  getSources,
+  getAuthors,
+} from "@/features/article/articleSlice";
 
 /* Components*/
 import Filter from "@/components/home/Filter";
@@ -14,6 +19,9 @@ export default function Home() {
   );
   useEffect(() => {
     dispatch(getArticles());
+    dispatch(getCategories());
+    dispatch(getSources());
+    dispatch(getAuthors());
   }, [dispatch]);
 
   let articleComponent = null;
@@ -33,6 +41,7 @@ export default function Home() {
       </h4>
     );
   }
+
   return (
     <div className="mt-20 p-4 h-full relative">
       <Filter />

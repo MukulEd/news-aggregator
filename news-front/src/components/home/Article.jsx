@@ -1,5 +1,4 @@
 export default function Article({ data }) {
-  console.log(data, "in Article");
   return (
     <div className="mx-auto px-4 max-w-xl">
       <div className="bg-white shadow-2xl rounded-lg mb-6 tracking-wide">
