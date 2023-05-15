@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'prefix' => 'auth'
+
+], function ($router) {
+
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'RegisterController@register');
+});
+
+Route::group(['middleware' => ['api']], function () {
+    Route::post('auth/logout', 'AuthController@logout');
+    Route::post('auth/refresh', 'AuthController@refresh');
+
+    # user
+    Route::get('me', 'UserController@me');
+
+    # Articles
+    Route::get('articles', 'ApiController@index');
+
+    # User Preference
+    Route::get('user-authors', 'UserAuthorController@index');
+    Route::post('user-authors', 'UserAuthorController@store');
+    Route::delete('user-authors/{id}', 'UserAuthorController@destroy');
+    Route::get('user-sources', 'UserSourceController@index');
+    Route::post('user-sources', 'UserSourceController@store');
+    Route::delete('user-sources/{id}', 'UserSourceController@destroy');
+    Route::get('user-categories', 'UserCategoryController@index');
+    Route::post('user-categories', 'UserCategoryController@store');
+    Route::delete('user-categories/{id}', 'UserCategoryController@destroy');
+
+    # Categories, sources & authors
+    Route::get('sources', 'SourceController@getAllSources');
+    Route::get('categories', 'CategoryController@getAllCategories');
+    Route::get('authors', 'AuthorController@getAllAuthors');
 });

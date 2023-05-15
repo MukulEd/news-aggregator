@@ -59,6 +59,13 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'news_api_url' => env('NEWS_API_URL', null),
+    'news_api_key' => env('NEWS_API_KEY', null),
+    'guardian_url' => env('GUARDIAN_URL', null),
+    'guardian_key' => env('GUARDIAN_KEY', null),
+    'ny_times_url' => env('NY_TIMES_URL', null),
+    'ny_times_key' => env('NY_TIMES_KEY', null),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -168,6 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -183,6 +191,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
     ])->toArray(),
 
 ];

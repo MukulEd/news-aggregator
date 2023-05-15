@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useStateContext } from "@/contexts/ContextProvider.jsx";
 import axios from "@/axios.js";
 import { toast } from "react-toastify";
@@ -9,12 +9,12 @@ import Input from "@/components/auth/Input";
 
 const signupFields = [
   {
-    labelText: "Username",
-    labelFor: "username",
-    id: "username",
-    name: "username",
+    labelText: "name",
+    labelFor: "name",
+    id: "name",
+    name: "name",
     type: "text",
-    autoComplete: "username",
+    autoComplete: "name",
     isRequired: true,
     placeholder: "Username",
   },
@@ -40,11 +40,11 @@ const signupFields = [
   },
   {
     labelText: "Confirm Password",
-    labelFor: "confirm_password",
-    id: "confirm_password",
-    name: "confirm_password",
+    labelFor: "password_confirmation",
+    id: "password_confirmation",
+    name: "password_confirmation",
     type: "password",
-    autoComplete: "confirm_password",
+    autoComplete: "password_confirmation",
     isRequired: true,
     placeholder: "Confirm Password",
   },
@@ -65,12 +65,20 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     registerUser();
   };
 
   //handle Signup API Integration here
-  const registerUser = () => {};
+  const registerUser = () => {
+    axios
+      .post("/auth/register", signupState)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="p-2">
@@ -80,7 +88,7 @@ export default function Register() {
         linkName="Login"
         linkUrl="/login"
       />
-      <form className="mt-8 space-y-6">
+      <form className="mt-8 space-y-6" method="post" onSubmit={handleSubmit}>
         <div className="">
           {signupFields.map((field) => (
             <Input
