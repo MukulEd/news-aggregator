@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useStateContext } from "@/contexts/ContextProvider.jsx";
 
-export default function Index() {
+export default function Navbar({ logout, user }) {
   const [rotate, setRotate] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -115,13 +116,13 @@ export default function Index() {
                   </div>
                 </div>
                 <div className=" hidden sm:flex justify-end flex-row lg:pr-7 sm:pr-6 py-6 pr-4 pl-8">
-                  <div className=" flex justify-center items-center flex-row">
+                  <div className=" flex justify-center items-center flex-row relative">
                     <div className="ml-2">
                       <p className="text-lg leading-4 font-semibold text-gray-800">
-                        David Hulk
+                        {user && user.name}
                       </p>
                       <p className=" font-normal text-xs leading-3 text-gray-600 mt-1">
-                        david@alphahulk.com
+                        {user && user.email}
                       </p>
                     </div>
                     <svg
@@ -143,6 +144,18 @@ export default function Index() {
                         strokeLinejoin="round"
                       />
                     </svg>
+                    {rotate && (
+                      <ul className="visible md:block hidden transition duration-300 opacity-100 bg-white  shadow-xl  border-2 border-gray-100 rounded mt-2 pb-1 w-48 absolute top-9 ">
+                        <li className="cursor-pointer  text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
+                          Preferences
+                        </li>
+                        <li className="text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
+                          <button onClick={logout} className="w-full text-left">
+                            Logout
+                          </button>
+                        </li>
+                      </ul>
+                    )}
                   </div>
                 </div>
                 {/* Burger Icon */}
@@ -272,12 +285,14 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="my-4 ">
-                  <ul>
-                    <li className="font-medium cursor-pointer  hover:text-indigo-700 ">
+                  <ul className=" transition duration-300 opacity-100 bg-white">
+                    <li className="cursor-pointer  text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
                       Preferences
                     </li>
-                    <li className="font-medium cursor-pointer  hover:text-indigo-700 ">
-                      Logout
+                    <li className="cursor-pointer  text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
+                      <button onClick={logout} className="w-full text-left">
+                        Logout
+                      </button>
                     </li>
                   </ul>
                 </div>

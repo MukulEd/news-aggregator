@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { useStateContext } from "@/contexts/ContextProvider.jsx";
 import { useRef, useEffect, useState } from "react";
-import axiosClient from "@/axios.js";
+import axios from "@/axios.js";
 
 /* import components*/
 import Navbar from "@/components/layouts/Navbar";
@@ -18,24 +18,22 @@ export default function AuthenticatedLayout() {
   const searchInputRef = useRef();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axiosClient.get("/user").then(({ data }) => {
-  //     setUser(data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    axios.get("/me").then(({ data }) => {
+      setUser(data.data.user);
+    });
+  }, []);
 
-  // if (!token) {
-  //   return <Navigate to="/login" />;
-  // }
-  const onLogout = (ev) => {
-    ev.preventDefault();
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
 
-    axiosClient.post("/logout").then(() => {
+  const logout = () => {
+    axios.post("/auth/logout").then(() => {
       setUser({});
       setToken(null);
     });
   };
-
   const onSearch = (e) => {
     e.preventDefault();
     const searchPayload = {
@@ -57,7 +55,7 @@ export default function AuthenticatedLayout() {
   return (
     <div className="bg-gray-100 h-full">
       <header>
-        <Navbar />
+        <Navbar logout={logout} user={user} />
       </header>
       <main className="p-4 h-full">
         <Outlet />

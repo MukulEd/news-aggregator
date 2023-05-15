@@ -6,7 +6,7 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 
 const Filter1 = () => {
-  const [showFilters, setShowfilters] = useState(true);
+  const [showFilters, setShowfilters] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState(true);
   const [sourceOptions, setSourceOptions] = useState(true);
   const [authorOptions, setAuthorOptions] = useState(true);
