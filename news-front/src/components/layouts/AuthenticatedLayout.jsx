@@ -19,9 +19,15 @@ export default function AuthenticatedLayout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("/me").then(({ data }) => {
-      setUser(data.data.user);
-    });
+    axios
+      .get("/me")
+      .then(({ data }) => {
+        setUser(data.data.user);
+      })
+      .catch(() => {
+        setToken(null);
+        navigate("/login");
+      });
   }, []);
 
   if (!token) {
@@ -34,24 +40,7 @@ export default function AuthenticatedLayout() {
       setToken(null);
     });
   };
-  const onSearch = (e) => {
-    e.preventDefault();
-    const searchPayload = {
-      searchInput: searchParams.get("q"),
-      fromdateInput: searchParams.get("fromdateInput"),
-      todateInput: searchParams.get("todateInput"),
-      source: searchParams.get("source"),
-    };
-    setSearchParams(searchPayload);
-    navigate({
-      pathname: "/search",
-      search:
-        "q=" +
-        searchInputRef.current.value +
-        "&source=" +
-        searchParams.get("source"),
-    });
-  };
+
   return (
     <div className="bg-gray-100 h-full">
       <header>

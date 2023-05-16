@@ -1,9 +1,23 @@
 import { useState } from "react";
-import { useStateContext } from "@/contexts/ContextProvider.jsx";
+import { useDispatch } from "react-redux";
+import {
+  getArticles,
+  setSearchKeyWord,
+  setFilterData,
+} from "@/features/article/articleSlice";
 
 export default function Navbar({ logout, user }) {
   const [rotate, setRotate] = useState(false);
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleKeyUp = (e) => {
+    if (e.keyCode === 13) {
+      dispatch(setSearchKeyWord(e.target.value));
+      dispatch(setFilterData({}));
+      dispatch(getArticles());
+    }
+  };
 
   return (
     <div className="fixed h-auto w-full z-10" style={{ maxHeight: 600 + "px" }}>
@@ -112,6 +126,7 @@ export default function Navbar({ logout, user }) {
                       className="focus:outline-none w-56  xl:w-64 bg-gray-50 font-normal text-sm leading-4 text-gray-500 placeholder-gray-500 "
                       type="text"
                       placeholder="Search"
+                      onKeyUp={handleKeyUp}
                     />
                   </div>
                 </div>
@@ -256,6 +271,7 @@ export default function Navbar({ logout, user }) {
                       className=" focus:outline-none w-44 lg:w-56 xl:w-64 bg-gray-50 font-normal text-sm leading-4 text-gray-500 placeholder-gray-500 "
                       type="text"
                       placeholder="Search"
+                      onKeyUp={handleKeyUp}
                     />
                   </div>
                 </div>

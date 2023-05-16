@@ -59,8 +59,8 @@ export const articleSlice = createSlice({
     loadMoreData: (state) => {
       state.articles.scrollLoading = true;
     },
-    setSearchKeyWord: (state, keyword) => {
-      state.filters.keyword = keyword;
+    setSearchKeyWord: (state, action) => {
+      state.filters.keyword = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -192,5 +192,6 @@ export const {
   decrementPage,
   loadMoreData,
   clearFilter,
+  setSearchKeyWord,
 } = articleSlice.actions;
 export default articleSlice.reducer;
