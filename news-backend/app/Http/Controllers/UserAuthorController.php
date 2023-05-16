@@ -11,21 +11,7 @@ use MarcinOrlowski\ResponseBuilder\ResponseBuilder;
 
 class UserAuthorController extends Controller
 {
-    /**
-     *
-     * @OA\Get(
-     *   path="/api/user-authors",
-     *   summary="list all user-author records",
-     *   tags={"Author"},
-     *
-     *   @OA\Response(response=200, description="successful operation"),
-     *   @OA\Response(response=403, description="Forbidden"),
-     *   @OA\Response(response=404, description="Not found"),
-     *   security={{"bearerAuth":{}}}
-     *
-     * )
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+
     public function index()
     {
         $user = Auth::guard()->user();
@@ -42,27 +28,7 @@ class UserAuthorController extends Controller
         return ResponseBuilder::asSuccess(200)->withData($data)->build();
     }
 
-    /**
-     *
-     * @OA\Post(
-     *   path="/api/user-authors",
-     *   summary="Add user-author",
-     *   tags={"Author"},
-     *  @OA\RequestBody(
-     *         required=true,
-     *         description="user-author object",
-     *         @OA\JsonContent(ref="#/components/schemas/UserAuthorRequest")
-     *     ),
-     *   @OA\Response(response=200, description="successful operation"),
-     *   @OA\Response(response=400, description="Validation errors"),
-     *   @OA\Response(response=401, description="Unauthenticated"),
-     *   @OA\Response(response=403, description="Forbidden"),
-     *   security={{"bearerAuth":{}}}
-     *
-     * )
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+
     public function store(Request $request)
     {
         $rules = [
@@ -88,34 +54,6 @@ class UserAuthorController extends Controller
         return ResponseBuilder::error(422, [], $v->errors()->messages());
     }
 
-    /**
-     *
-     * @OA\Delete(
-     *   path="/api/user-authors/{id}",
-     *   summary="delete user-authors record",
-     *   tags={"Author"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="user-author id"
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="user-author object",
-     *         @OA\Parameter(name="auser_author_id"),
-     *     ),
-     *   @OA\Response(response=200, description="successful operation"),
-     *   @OA\Response(response=400, description="Validation errors"),
-     *   @OA\Response(response=401, description="Unauthenticated"),
-     *   @OA\Response(response=403, description="Forbidden"),
-     *   security={{"bearerAuth":{}}}
-     *
-     * )
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function destroy($id)
     {
         $userAuthor = UserAuthor::find($id);

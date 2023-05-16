@@ -15,7 +15,7 @@ class Api extends Model
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function fetchApi($keyword = null, $date = null, $page, $offset)
+    public function fetchApi($keyword = null, $date = [], $page, $offset)
     {
         return (new Helper)->apiCall($keyword, $date, $page, $offset);
     }
@@ -37,5 +37,4 @@ class Api extends Model
     {
         return (new Helper)->getAuthorsApiCall();
     }
-
 }

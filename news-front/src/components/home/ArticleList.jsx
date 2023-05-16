@@ -2,21 +2,25 @@ import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Article from "./Article";
 import Loader from "@/components/helper/Loader";
-import { getArticles, incrementPage } from "@/features/article/articleSlice";
+import {
+  getArticles,
+  incrementPage,
+  loadMoreData,
+} from "@/features/article/articleSlice";
 export default function ArticleList() {
   const dispatch = useDispatch();
   const { articles } = useSelector((state) => state.article);
   const handleScroll = () => {
-    console.log("handleScroll");
     if (
-      window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
+      window.innerHeight + document.documentElement.scrollTop <
+        document.documentElement.offsetHeight * 0.9 ||
       articles.scrollLoading
     ) {
       return;
     }
 
     dispatch(incrementPage());
+    dispatch(loadMoreData());
     dispatch(getArticles());
   };
 

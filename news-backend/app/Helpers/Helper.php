@@ -16,7 +16,7 @@ class Helper
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function apiCall($keyword = null, $date = null, $page, $offset)
+    public function apiCall($keyword = null, $date = [], $page, $offset)
     {
         $guardianUrlParams = '';
         $nyUrlParams = '';
@@ -28,12 +28,14 @@ class Helper
         } else {
             $newUrlParams .= '&q=*';
         }
-        if (!is_null($date)) {
-            $dateNy = Carbon::createFromFormat('Y-m-d', $date)
-                ->format('Ymd');
-            $guardianUrlParams .= '&from-date=' . $date . '&to-date=' . $date;
-            $newUrlParams .= '&from=' . $date . '&to=' . $date;
-            $nyUrlParams .= '&begin_date=' . $dateNy . '&begin_date=' . $dateNy;
+        if (count($date)) {
+            $startNy = Carbon::parse($date[0])->format('Ymd');
+            $endNy = Carbon::parse($date[1])->format('Ymd');
+            $start = Carbon::parse($date[1])->toDateString();
+            $end = Carbon::parse($date[1])->toDateString();
+            $guardianUrlParams .= '&from-date=' . $start . '&to-date=' . $end;
+            $newUrlParams .= '&from=' . $start . '&to=' . $end;
+            $nyUrlParams .= '&begin_date=' . $startNy . '&begin_date=' . $endNy;
         }
 
         $endpoint1 = config('app.ny_times_url') . 'articlesearch.json?api-key=' . config('app.ny_times_key') . '&page=' . $page . $nyUrlParams;

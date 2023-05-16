@@ -32,44 +32,41 @@ export const articleSlice = createSlice({
       startDate: null,
       endDate: null,
       page: 1,
+      keyword: "",
     },
   },
   reducers: {
     setFilterData: (state, action) => {
-      switch (action.payload.actionType) {
-        case "categories":
-        case "sources":
-        case "authors":
-          state.filters[action.payload.actionType] = action.payload.data.map(
-            (pt) => pt.id
-          );
-          break;
-        case "date":
-          state.filters.startDate = action.payload.data.startDate;
-          state.filters.endDate = action.payload.data.endDate;
-          break;
-      }
+      state.filters = { ...state.filters, ...action.payload, page: 1 };
+      //reset articles
+      state.articles.data = [];
+    },
+    clearFilter: (state) => {
+      state.filters.sources = [];
+      state.filters.categories = [];
+      state.filters.authors = [];
+      state.startDate = null;
+      state.endDate = null;
     },
     incrementPage: (state) => {
-      console.log("increment Page", state.filters.page);
       state.filters.page = parseInt(state.filters.page) + 1;
-      console.log("increment Page after", state.filters.page);
     },
     decrementPage: (state) => {
       if (state.filters.page > 1) {
         state.filters.page = parseInt(state.filters.page) - 1;
       }
     },
+    loadMoreData: (state) => {
+      state.articles.scrollLoading = true;
+    },
+    setSearchKeyWord: (state, keyword) => {
+      state.filters.keyword = keyword;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getArticles.pending, (state, action) => {
-      if (
-        state.articles.loading === "idle" &&
-        state.articles.data.length === 0
-      ) {
+      if (state.articles.loading === "idle" && !state.articles.scrollLoading) {
         state.articles.loading = "pending";
-      } else if (state.articles.data.length != 0) {
-        state.articles.scrollLoading = true;
       }
     });
     builder.addCase(getArticles.fulfilled, (state, action) => {
@@ -107,7 +104,6 @@ export const articleSlice = createSlice({
       }
     });
     builder.addCase(getCategories.rejected, (state, action) => {
-      console.log(action, "error");
       if (state.categories.loading === "pending") {
         state.categories.loading = "idle";
         state.categories.error = "Error occured";
@@ -126,7 +122,6 @@ export const articleSlice = createSlice({
       }
     });
     builder.addCase(getAuthors.rejected, (state, action) => {
-      console.log(action, "error");
       if (state.authors.loading === "pending") {
         state.authors.loading = "idle";
         state.authors.error = "Error occured";
@@ -145,7 +140,6 @@ export const articleSlice = createSlice({
       }
     });
     builder.addCase(getSources.rejected, (state, action) => {
-      console.log(action, "error");
       if (state.sources.loading === "pending") {
         state.sources.loading = "idle";
         state.sources.error = "Error occured";
@@ -158,9 +152,16 @@ export const getArticles = createAsyncThunk(
   "article/getArticles",
   async (arg, { getState }) => {
     const state = getState();
+    const filters = state.article.filters;
     const response = await axios.get("/articles", {
       params: {
-        page: state.article.filters.page,
+        page: filters.page,
+        keyword: filters.keyword,
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        sources: filters.sources.map((n) => n.label),
+        categories: filters.categories.map((n) => n.label),
+        authors: filters.authors.map((n) => n.label),
       },
     });
     return response.data;
@@ -185,6 +186,11 @@ export const getAuthors = createAsyncThunk("article/getAuthors", async () => {
   return response.data;
 });
 
-export const { setFilterData, incrementPage, decrementPage } =
-  articleSlice.actions;
+export const {
+  setFilterData,
+  incrementPage,
+  decrementPage,
+  loadMoreData,
+  clearFilter,
+} = articleSlice.actions;
 export default articleSlice.reducer;

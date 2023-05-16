@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { useSelector, useDispatch } from "react-redux";
-import { setFilterData } from "@/features/article/articleSlice";
+import { setFilterData, getArticles } from "@/features/article/articleSlice";
 
 const makeOptions = (data) => {
   return data.map((point) => ({ value: point.id, label: point.name }));
 };
+
 const Filter1 = () => {
   const [showFilters, setShowfilters] = useState(false);
   const { categories, sources, authors } = useSelector(
@@ -31,24 +32,66 @@ const Filter1 = () => {
     },
   ]);
 
+  const [sourcesFilter, setSourceFilter] = useState([]);
+  const [authorsFilter, setAuthorFilter] = useState([]);
+  const [categoriesFilter, setCategoryFilter] = useState([]);
+
   const handleSelectChange = (values, { name }) => {
-    dispatch(setFilterData({ actionType: name, data: values }));
+    switch (name) {
+      case "categories":
+        setCategoryFilter(values);
+        break;
+      case "sources":
+        setSourceFilter(values);
+        break;
+      case "authors":
+        setAuthorFilter(values);
+        break;
+    }
   };
   const handleDateRangeChange = (item) => {
     setDate([item.selection]);
-    const { startDate, endDate } = item.selection;
-    dispatch(
-      setFilterData({
-        actionType: "date",
-        data: {
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
-        },
-      })
-    );
   };
 
-  const applyFilters = () => {};
+  const applyFilters = () => {
+    dispatch(
+      setFilterData({
+        sources: sourcesFilter,
+        categories: categoriesFilter,
+        authors: authorsFilter,
+        startDate: date[0].startDate.toISOString(),
+        endDate: date[0].endDate.toISOString(),
+      })
+    );
+    setShowfilters(false);
+    dispatch(getArticles());
+  };
+
+  const categoryValue = useRef();
+  const sourceValue = useRef();
+  const authorValue = useRef();
+  const clearAll = () => {
+    setSourceFilter([]);
+    setAuthorFilter([]);
+    setCategoryFilter([]);
+
+    //clear Select
+    categoryValue.current.clearValue();
+    sourceValue.current.clearValue();
+    authorValue.current.clearValue();
+
+    //Reset Date
+    setDate([
+      {
+        endDate: new Date(),
+        startDate: new Date(),
+        key: "selection",
+      },
+    ]);
+    //Apply Filters
+    applyFilters();
+    setShowfilters(true);
+  };
 
   return (
     <div className="2xl:container 2xl:mx-auto">
@@ -224,7 +267,7 @@ const Filter1 = () => {
       <div
         id="filterSection"
         className={
-          "absolute left-0 md:py-10 lg:px-20 md:px-6 py-9 px-4 bg-gray-50 md:w-3/4 w-full rounded shadow-2xl border-2 border-slate-100 " +
+          "absolute left-0 md:py-10 z-20 lg:px-20 md:px-6 py-9 px-4 bg-gray-50 md:w-3/4 w-full rounded shadow-2xl border-2 border-slate-100 " +
           (showFilters ? "block" : "hidden")
         }
       >
@@ -310,6 +353,9 @@ const Filter1 = () => {
               placeholder={"Select Categories"}
               isLoading={categories.loading == "pending"}
               name={"categories"}
+              isClearable={true}
+              backspaceRemovesValue={true}
+              ref={categoryValue}
             />
           </div>
         </div>
@@ -356,6 +402,9 @@ const Filter1 = () => {
               isLoading={sources.loading == "pending"}
               onChange={handleSelectChange}
               name={"sources"}
+              isClearable={true}
+              backspaceRemovesValue={true}
+              ref={sourceValue}
             />
           </div>
         </div>
@@ -396,6 +445,9 @@ const Filter1 = () => {
               isLoading={authors.loading == "pending"}
               onChange={handleSelectChange}
               name={"authors"}
+              isClearable={true}
+              backspaceRemovesValue={true}
+              ref={authorValue}
             />
           </div>
         </div>
@@ -437,10 +489,37 @@ const Filter1 = () => {
           </div>
         </div>
 
-        <div className="px-0 mt-10 w-full md:w-auto md:mt-0 md:py-10 lg:px-20 md:px-6">
+        <div className="px-0 mt-10 w-full md:w-auto md:mt-0 md:py-10 lg:px-20 md:px-6 flex flex-wrap md:justify-between">
+          <button
+            onClick={clearAll}
+            className="w-1/3 hover:bg-red-700 flex items-center text-center focus:ring focus:ring-offset-2 focus:ring-red-600 text-base leading-4 font-medium py-4 px-10 text-white bg-red-600"
+          >
+            <svg
+              className=" w-3 h-3 mr-2 mt-0.5"
+              viewBox="0 0 26 26"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M25 1L1 25"
+                stroke="#fff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+              <path
+                d="M1 1L25 25"
+                stroke="#fff"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+            </svg>
+            Clear All
+          </button>
           <button
             onClick={applyFilters}
-            className="w-full hover:bg-gray-700 focus:ring focus:ring-offset-2 focus:ring-gray-800 text-base leading-4 font-medium py-4 px-10 text-white bg-gray-800"
+            className="w-1/2 hover:bg-gray-700 focus:ring focus:ring-offset-2 focus:ring-gray-800 text-base leading-4 font-medium py-4 px-10 text-white bg-gray-800"
           >
             Apply Filter
           </button>
