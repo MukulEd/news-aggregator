@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use PharIo\Manifest\Author;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -59,5 +60,18 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function authors()
+    {
+        return $this->hasMany(UserAuthors::class);
+    }
+    public function sources()
+    {
+        return $this->hasMany(UserSources::class);
+    }
+    public function categories()
+    {
+        return $this->hasMany(UserCategory::class);
     }
 }

@@ -20,9 +20,6 @@ export default function Home() {
   );
   useEffect(() => {
     dispatch(getArticles());
-    dispatch(getCategories());
-    dispatch(getSources());
-    dispatch(getAuthors());
   }, [dispatch]);
 
   let articleComponent = <ArticleList />;

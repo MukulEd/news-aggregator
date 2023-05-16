@@ -5,6 +5,7 @@ import {
   setSearchKeyWord,
   setFilterData,
 } from "@/features/article/articleSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar({ logout, user }) {
   const [rotate, setRotate] = useState(false);
@@ -19,6 +20,16 @@ export default function Navbar({ logout, user }) {
     }
   };
 
+  const navigate = useNavigate();
+  const navigateToPersonalized = () => {
+    setRotate(!rotate);
+    navigate("personalization");
+  };
+
+  const navigateHome = () => {
+    navigate("home");
+  };
+
   return (
     <div className="fixed h-auto w-full z-10" style={{ maxHeight: 600 + "px" }}>
       <div className=" h-full relative">
@@ -27,60 +38,62 @@ export default function Navbar({ logout, user }) {
             <nav className>
               <div className=" flex flex-row justify-between">
                 <div className=" flex space-x-3 items-center py-5 lg:pl-7 sm:pl-6 py-6 pl-4 pr-8">
-                  <svg
-                    className="w-8 h-8"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      width="48"
-                      height="48"
-                      fill="white"
-                      fillOpacity="0.01"
-                    ></rect>
-                    <path
-                      d="M18 10L24 4M24 4L30 10M24 4V14"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                    <path
-                      d="M18 38L24 44M24 44L30 38M24 44V34"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                    <path
-                      d="M38 18L44 24M44 24L38 30M44 24H34"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                    <path
-                      d="M10 18L4 24M4 24L10 30M4 24H14"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                    <circle
-                      cx="24"
-                      cy="24"
-                      r="4"
-                      fill="currentColor"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></circle>
-                  </svg>
-                  <h1 className=" font-semibold text-2xl leading-6 text-gray-800">
-                    News
-                  </h1>
+                  <button onClick={navigateHome} className="flex">
+                    <svg
+                      className="w-8 h-8"
+                      viewBox="0 0 48 48"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        width="48"
+                        height="48"
+                        fill="white"
+                        fillOpacity="0.01"
+                      ></rect>
+                      <path
+                        d="M18 10L24 4M24 4L30 10M24 4V14"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                      <path
+                        d="M18 38L24 44M24 44L30 38M24 44V34"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                      <path
+                        d="M38 18L44 24M44 24L38 30M44 24H34"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                      <path
+                        d="M10 18L4 24M4 24L10 30M4 24H14"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                      <circle
+                        cx="24"
+                        cy="24"
+                        r="4"
+                        fill="currentColor"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></circle>
+                    </svg>
+                    <h1 className=" font-semibold text-2xl leading-6 text-gray-800">
+                      News
+                    </h1>
+                  </button>
                 </div>
                 {/* For large (i.e. desktop and laptop sized screen) */}
                 <div className="lg:flex hidden flex-auto justify-between flex-row px-7 border-l border-r border-gray-200 py-6">
@@ -162,7 +175,12 @@ export default function Navbar({ logout, user }) {
                     {rotate && (
                       <ul className="visible md:block hidden transition duration-300 opacity-100 bg-white  shadow-xl  border-2 border-gray-100 rounded mt-2 pb-1 w-48 absolute top-9 ">
                         <li className="cursor-pointer  text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
-                          Preferences
+                          <button
+                            className="w-full text-left"
+                            onClick={navigateToPersonalized}
+                          >
+                            Personalization
+                          </button>
                         </li>
                         <li className="text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
                           <button onClick={logout} className="w-full text-left">

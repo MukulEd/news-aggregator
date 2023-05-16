@@ -12,23 +12,6 @@ use MarcinOrlowski\ResponseBuilder\ResponseBuilder;
 class UserAuthorController extends Controller
 {
 
-    public function index()
-    {
-        $user = Auth::guard()->user();
-        if (!$user) {
-            return ResponseBuilder::asError(404)->withMessage('user_not_found')->build();
-        }
-
-        $userAuthor = UserAuthor::orderBy('created_at', 'desc')->where([
-            ['user_id', $user->id],
-        ]);
-
-        $data = $userAuthor->get()->toArray();
-
-        return ResponseBuilder::asSuccess(200)->withData($data)->build();
-    }
-
-
     public function store(Request $request)
     {
         $rules = [

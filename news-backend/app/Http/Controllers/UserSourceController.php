@@ -12,21 +12,7 @@ use MarcinOrlowski\ResponseBuilder\ResponseBuilder;
 class UserSourceController extends Controller
 {
 
-    public function index()
-    {
-        $user = Auth::guard()->user();
-        if (!$user) {
-            return ResponseBuilder::asError(404)->withMessage('user_not_found')->build();
-        }
 
-        $userSource = UserSource::orderBy('created_at', 'desc')->where([
-            ['user_id', $user->id],
-        ]);
-
-        $data = $userSource->get()->toArray();
-
-        return ResponseBuilder::asSuccess(200)->withData($data)->build();
-    }
 
 
     public function store(Request $request)

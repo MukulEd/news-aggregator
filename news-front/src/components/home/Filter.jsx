@@ -362,7 +362,7 @@ const Filter1 = () => {
 
         <hr className=" bg-gray-200 lg:w-6/12 w-full md:my-10 my-8" />
 
-        {/* Material Section */}
+        {/* Sources */}
         <div>
           <div className=" flex space-x-2">
             <svg
@@ -411,7 +411,7 @@ const Filter1 = () => {
 
         <hr className=" bg-gray-200 lg:w-6/12 w-full md:my-10 my-8" />
 
-        {/* Size Section */}
+        {/* Authors */}
         <div>
           <div className=" flex space-x-2">
             <svg

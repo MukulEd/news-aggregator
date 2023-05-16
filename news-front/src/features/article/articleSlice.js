@@ -34,6 +34,13 @@ export const articleSlice = createSlice({
       page: 1,
       keyword: "",
     },
+    user: {
+      sources: [],
+      categories: [],
+      authors: [],
+      showPersonalizedView: false,
+      loading: true,
+    },
   },
   reducers: {
     setFilterData: (state, action) => {
@@ -61,6 +68,10 @@ export const articleSlice = createSlice({
     },
     setSearchKeyWord: (state, action) => {
       state.filters.keyword = action.payload;
+    },
+    setPersonalizeData: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+      console.log(state.user, "data");
     },
   },
   extraReducers: (builder) => {
@@ -145,6 +156,21 @@ export const articleSlice = createSlice({
         state.sources.error = "Error occured";
       }
     });
+
+    ///////////////// user preferences //////////////
+    builder.addCase(getUserPreferences.pending, (state, action) => {});
+    builder.addCase(getUserPreferences.fulfilled, (state, action) => {
+      for (let key in action.payload.data) {
+        state.user[key] = action.payload.data[key].map((item) => ({
+          value: item.reference,
+          label: item.name,
+        }));
+        state.user.loading = false;
+      }
+    });
+    builder.addCase(getUserPreferences.rejected, (state, action) => {
+      state.user.loading = false;
+    });
   },
 });
 
@@ -186,6 +212,14 @@ export const getAuthors = createAsyncThunk("article/getAuthors", async () => {
   return response.data;
 });
 
+export const getUserPreferences = createAsyncThunk(
+  "article/getUserPreferences",
+  async () => {
+    const response = await axios.get("/user-preferences");
+    return response.data;
+  }
+);
+
 export const {
   setFilterData,
   incrementPage,
@@ -193,5 +227,6 @@ export const {
   loadMoreData,
   clearFilter,
   setSearchKeyWord,
+  setPersonalizeData,
 } = articleSlice.actions;
 export default articleSlice.reducer;

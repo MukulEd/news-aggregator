@@ -5,8 +5,8 @@ import NotFound from "./views/NotFound";
 import AuthenticatedLayout from "./components/layouts/AuthenticatedLayout";
 import GuestLayout from "@/components/layouts/GuestLayout.jsx";
 import Home from "./views/Home";
-import SearchPage from "./views/SearchPage";
-import SingleArticle from "./views/SingleArticle.jsx";
+import Personalization from "./views/Personalization.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,12 +21,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/search",
-        element: <SearchPage />,
-      },
-      {
-        path: "/singleArticle",
-        element: <SingleArticle />,
+        path: "/personalization",
+        element: <Personalization />,
       },
     ],
   },

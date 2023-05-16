@@ -12,21 +12,6 @@ use MarcinOrlowski\ResponseBuilder\ResponseBuilder;
 class UserCategoryController extends Controller
 {
 
-    public function index()
-    {
-        $user = Auth::guard()->user();
-        if (!$user) {
-            return ResponseBuilder::asError(404)->withMessage('user_not_found')->build();
-        }
-
-        $userCategory = UserCategory::orderBy('created_at', 'desc')->where([
-            ['user_id', $user->id],
-        ]);
-
-        $data = $userCategory->get()->toArray();
-
-        return ResponseBuilder::asSuccess(200)->withData($data)->build();
-    }
 
 
     public function store(Request $request)

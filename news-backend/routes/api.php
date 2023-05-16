@@ -35,15 +35,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('articles', 'ArticleController@index');
 
     # User Preference
-    Route::get('user-authors', 'UserAuthorController@index');
+    Route::get('user-preferences', 'PersonalizationController@getUserPreferences');
+    Route::put('update-preferences', 'PersonalizationController@updatePreferences');
     Route::post('user-authors', 'UserAuthorController@store');
-    Route::delete('user-authors/{id}', 'UserAuthorController@destroy');
-    Route::get('user-sources', 'UserSourceController@index');
     Route::post('user-sources', 'UserSourceController@store');
-    Route::delete('user-sources/{id}', 'UserSourceController@destroy');
-    Route::get('user-categories', 'UserCategoryController@index');
     Route::post('user-categories', 'UserCategoryController@store');
-    Route::delete('user-categories/{id}', 'UserCategoryController@destroy');
 
     # Categories, sources & authors
     Route::get('sources', 'SourceController@getAllSources');

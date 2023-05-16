@@ -8,6 +8,13 @@ import {
 import { useStateContext } from "@/contexts/ContextProvider.jsx";
 import { useRef, useEffect } from "react";
 import axios from "@/axios.js";
+import { useDispatch } from "react-redux";
+import {
+  getCategories,
+  getSources,
+  getAuthors,
+  getUserPreferences,
+} from "@/features/article/articleSlice";
 
 /* import components*/
 import Navbar from "@/components/layouts/Navbar";
@@ -17,6 +24,7 @@ export default function AuthenticatedLayout() {
   const { user, token, setUser, setToken } = useStateContext();
   const searchInputRef = useRef();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -28,6 +36,10 @@ export default function AuthenticatedLayout() {
         setToken(null);
         navigate("/login");
       });
+    dispatch(getCategories());
+    dispatch(getSources());
+    dispatch(getAuthors());
+    dispatch(getUserPreferences());
   }, []);
 
   if (!token) {
