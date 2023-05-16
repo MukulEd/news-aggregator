@@ -32,7 +32,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('me', 'UserController@me');
 
     # Articles
-    Route::get('articles', 'ApiController@index');
+    Route::get('articles', 'ArticleController@index');
 
     # User Preference
     Route::get('user-authors', 'UserAuthorController@index');

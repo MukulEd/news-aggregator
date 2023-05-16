@@ -5,6 +5,7 @@ import {
   getCategories,
   getSources,
   getAuthors,
+  incrementPage,
 } from "@/features/article/articleSlice";
 
 /* Components*/
@@ -24,7 +25,7 @@ export default function Home() {
     dispatch(getAuthors());
   }, [dispatch]);
 
-  let articleComponent = null;
+  let articleComponent = <ArticleList />;
   if (articles.loading === "pending") {
     articleComponent = (
       <div className="flex justify-center ">
@@ -45,7 +46,9 @@ export default function Home() {
   return (
     <div className="mt-20 p-4 h-full relative">
       <Filter />
-      {articleComponent}
+      <div className="overflow-hidden w-full" id="articleListing">
+        {articleComponent}
+      </div>
     </div>
   );
 }

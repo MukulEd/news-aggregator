@@ -8,6 +8,7 @@ export const articleSlice = createSlice({
       loading: "idle",
       data: [],
       error: null,
+      scrollLoading: false,
     },
     categories: {
       loading: "idle",
@@ -30,6 +31,7 @@ export const articleSlice = createSlice({
       authors: [],
       startDate: null,
       endDate: null,
+      page: 1,
     },
   },
   reducers: {
@@ -48,24 +50,48 @@ export const articleSlice = createSlice({
           break;
       }
     },
+    incrementPage: (state) => {
+      console.log("increment Page", state.filters.page);
+      state.filters.page = parseInt(state.filters.page) + 1;
+      console.log("increment Page after", state.filters.page);
+    },
+    decrementPage: (state) => {
+      if (state.filters.page > 1) {
+        state.filters.page = parseInt(state.filters.page) - 1;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getArticles.pending, (state, action) => {
-      if (state.articles.loading === "idle") {
+      if (
+        state.articles.loading === "idle" &&
+        state.articles.data.length === 0
+      ) {
         state.articles.loading = "pending";
+      } else if (state.articles.data.length != 0) {
+        state.articles.scrollLoading = true;
       }
     });
     builder.addCase(getArticles.fulfilled, (state, action) => {
-      if (state.articles.loading === "pending") {
-        state.articles.data = action.payload.data.articles;
+      if (
+        state.articles.loading === "pending" ||
+        state.articles.scrollLoading
+      ) {
+        state.articles.data.push(...action.payload.data.articles);
+        state.filters.page = action.payload.data.current_page;
         state.articles.loading = "idle";
+        state.articles.scrollLoading = false;
       }
+      console.log(action.payload.data.current_page, "current_page");
     });
     builder.addCase(getArticles.rejected, (state, action) => {
-      console.log(action, "error");
-      if (state.articles.loading === "pending") {
+      if (
+        state.articles.loading === "pending" ||
+        state.articles.scrollLoading
+      ) {
         state.articles.loading = "idle";
         state.articles.error = "Error occured";
+        state.articles.scrollLoading = false;
       }
     });
     //////////////////// categories////////////////////
@@ -132,7 +158,11 @@ export const getArticles = createAsyncThunk(
   "article/getArticles",
   async (arg, { getState }) => {
     const state = getState();
-    const response = await axios.get("/articles");
+    const response = await axios.get("/articles", {
+      params: {
+        page: state.article.filters.page,
+      },
+    });
     return response.data;
   }
 );
@@ -155,5 +185,6 @@ export const getAuthors = createAsyncThunk("article/getAuthors", async () => {
   return response.data;
 });
 
-export const { setFilterData } = articleSlice.actions;
+export const { setFilterData, incrementPage, decrementPage } =
+  articleSlice.actions;
 export default articleSlice.reducer;
