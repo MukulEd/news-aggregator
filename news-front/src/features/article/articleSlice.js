@@ -73,6 +73,9 @@ export const articleSlice = createSlice({
       state.user = { ...state.user, ...action.payload };
       console.log(state.user, "data");
     },
+    toggleUserView: (state) => {
+      state.user.showPersonalizedView = !state.user.showPersonalizedView;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getArticles.pending, (state, action) => {
@@ -188,6 +191,7 @@ export const getArticles = createAsyncThunk(
         sources: filters.sources.map((n) => n.label),
         categories: filters.categories.map((n) => n.label),
         authors: filters.authors.map((n) => n.label),
+        userPreview: state.article.user.showPersonalizedView ? 1 : 0,
       },
     });
     return response.data;
@@ -228,5 +232,6 @@ export const {
   clearFilter,
   setSearchKeyWord,
   setPersonalizeData,
+  toggleUserView,
 } = articleSlice.actions;
 export default articleSlice.reducer;

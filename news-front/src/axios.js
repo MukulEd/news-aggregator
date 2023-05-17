@@ -16,12 +16,21 @@ axios.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     try {
       const { response } = error;
-
-      if (response && response.status === 401) {
-        localStorage.removeItem("ACCESS_TOKEN");
+      const originalRequest = error.config;
+      if (response && response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          const { data } = await axios.get("/auth/refresh");
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer " + data.data.token;
+          localStorage.setItem("ACCESS_TOKEN", data.data.token);
+          return axios(originalRequest);
+        } catch (e) {
+          console.log("not refresh");
+        }
       }
     } catch (e) {
       console.error(e);

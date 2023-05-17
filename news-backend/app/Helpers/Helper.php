@@ -42,30 +42,31 @@ class Helper
         $endpoint2 = config('app.news_api_url') . 'everything?apiKey=' . config('app.news_api_key') . '&pageSize=' . $offset . '&page=' . $page . $newUrlParams;
         $endpoint3 = config('app.guardian_url') . '?api-key=' . config('app.guardian_key') . '&page-size=' . $offset . '&page=' . $page . '&show-fields=byline,thumbnail,bodyText&' . $guardianUrlParams;
 
-        if (Cache::has('endpoints' . $page)) {
-            $results = Cache::get('endpoints' . $page);
-        } else {
-            try {
-                $promises = [];
-                $promises[] = Http::async()->get($endpoint1);
-                $promises[] = Http::async()->get($endpoint2);
-                $promises[] = Http::async()->get($endpoint3);
+        // if (Cache::has('endpoints' . $page)) {
+        //     $results = Cache::get('endpoints' . $page);
+        // } else {
 
-                $responses = Utils::unwrap($promises);
-                foreach ($responses as $response) {
-                    $response = json_decode($response->getBody(), true);
-                }
+        try {
+            $promises = [];
+            $promises[] = Http::async()->get($endpoint1);
+            $promises[] = Http::async()->get($endpoint2);
+            $promises[] = Http::async()->get($endpoint3);
 
-                $results_ny = $responses[0]['response']['docs'] ?? [];
-                $results_news = $responses[1]['articles'] ?? [];
-                $results_guardian = $responses[2]['response']['results'] ?? [];
-
-                $results = ['guardian' => $results_guardian, 'ny_times' => $results_ny, 'news_api' => $results_news];
-            } catch (RequestException $e) {
-                $results = ['guardian' => [], 'ny_times' => [], 'news_api' => []];
+            $responses = Utils::unwrap($promises);
+            foreach ($responses as $response) {
+                $response = json_decode($response->getBody(), true);
             }
-            Cache::put('endpoints' . $page, $results, 10);
+
+            $results_ny = $responses[0]['response']['docs'] ?? [];
+            $results_news = $responses[1]['articles'] ?? [];
+            $results_guardian = $responses[2]['response']['results'] ?? [];
+
+            $results = ['guardian' => $results_guardian, 'ny_times' => $results_ny, 'news_api' => $results_news];
+        } catch (RequestException $e) {
+            $results = ['guardian' => [], 'ny_times' => [], 'news_api' => []];
         }
+        // Cache::put('endpoints' . $page, $results, 10);
+        // }
         return $results;
     }
 

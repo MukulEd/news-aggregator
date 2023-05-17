@@ -18,7 +18,7 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         $page = $request->query('page', 1);
-        $offset = $request->query('offset', 15);
+        $offset = $request->query('offset', $request->userPreview ? 200 : 15);
         $user = Auth::guard()->user();
         if (!$user) {
             return ResponseBuilder::asError(404)->withMessage('user not found')->build();

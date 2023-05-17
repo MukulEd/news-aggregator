@@ -12,6 +12,7 @@ import {
 import Filter from "@/components/home/Filter";
 import ArticleList from "@/components/home/ArticleList.jsx";
 import Loader from "@/components/helper/Loader";
+import PreferenceViewToggle from "@/components/home/PreferenceToggle.jsx";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -42,6 +43,9 @@ export default function Home() {
 
   return (
     <div className="mt-20 p-4 h-full relative">
+      <div className="flex p-2 justify-end">
+        <PreferenceViewToggle />
+      </div>
       <Filter />
       <div className="overflow-hidden w-full" id="articleListing">
         {articleComponent}
