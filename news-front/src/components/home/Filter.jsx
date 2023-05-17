@@ -500,10 +500,10 @@ const Filter1 = () => {
             </div>
           </div>
 
-          <div className="px-0 mt-10 w-full md:w-auto md:mt-0 md:py-10 lg:px-20 md:px-6 flex flex-wrap md:justify-between">
+          <div className="px-0 mt-10 w-full md:w-auto md:mt-0 md:py-10 lg:px-20 md:px-6 flex flex-wrap justify-between">
             <button
               onClick={clearAll}
-              className="w-1/3 hover:bg-red-700 flex items-center text-center focus:ring focus:ring-offset-2 focus:ring-red-600 text-base leading-4 font-medium py-4 px-10 text-white bg-red-600"
+              className="w-1/3 hover:bg-red-700 flex items-center text-center focus:ring focus:ring-offset-2 focus:ring-red-600 text-base leading-4 font-medium py-4 px-4 text-white bg-red-600"
             >
               <svg
                 className=" w-3 h-3 mr-2 mt-0.5"

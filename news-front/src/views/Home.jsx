@@ -43,7 +43,7 @@ export default function Home() {
 
   return (
     <div className="mt-20 p-4 h-full relative">
-      <div className="flex p-2 justify-end">
+      <div className="flex p-2 justify-end mt-5 md:mt-0">
         <PreferenceViewToggle />
       </div>
       <Filter />

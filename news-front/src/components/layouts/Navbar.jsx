@@ -23,6 +23,7 @@ export default function Navbar({ logout, user }) {
   const navigate = useNavigate();
   const navigateToPersonalized = () => {
     setRotate(!rotate);
+    setShow(false);
     navigate("personalization");
   };
 
@@ -98,9 +99,6 @@ export default function Navbar({ logout, user }) {
                 {/* For large (i.e. desktop and laptop sized screen) */}
                 <div className="lg:flex hidden flex-auto justify-between flex-row px-7 border-l border-r border-gray-200 py-6">
                   <div className>
-                    {/* <p className=" font-normal text-xs leading-3 text-gray-600">
-                      Hi David
-                    </p> */}
                     <h3 className=" font-normal text-lg leading-5 text-gray-800 mt-2 flex  items-center">
                       Search News by keyword
                       <svg
@@ -311,17 +309,22 @@ export default function Navbar({ logout, user }) {
                 <div className="flex flex-auto justify-between">
                   <div className="">
                     <p className="text-lg leading-4 font-semibold text-gray-800">
-                      David Hulk
+                      {user.name}
                     </p>
                     <p className=" font-normal text-xs leading-3 text-gray-600 mt-1">
-                      david@alphahulk.com
+                      {user.email}
                     </p>
                   </div>
                 </div>
                 <div className="my-4 ">
                   <ul className=" transition duration-300 opacity-100 bg-white">
                     <li className="cursor-pointer  text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
-                      Preferences
+                      <button
+                        className="w-full text-left"
+                        onClick={navigateToPersonalized}
+                      >
+                        Personalization
+                      </button>
                     </li>
                     <li className="cursor-pointer  text-sm  leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal">
                       <button onClick={logout} className="w-full text-left">
